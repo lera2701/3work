@@ -11,8 +11,8 @@ UPLOAD_FOLDER = 'E:/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Замените на ваши ключи Google reCAPTCHA
-SECRET_KEY = "6LeJFtApAAAAAA9e7wBn0hC2mJo2NIOM5kDZ8MBN"
-SITE_KEY = "6LeJFtApAAAAACGMGgam1GpQGBrEoowXhGEOaJIK"
+SECRET_KEY = "6Lfeh-EpAAAAAJLTw3wi2XvzoiDtud6K8LMbCZfi"
+SITE_KEY = "6Lfeh-EpAAAAAJLTw3wi2XvzoiDtud6K8LMbCZfi"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
