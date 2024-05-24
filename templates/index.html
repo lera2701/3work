@@ -1,134 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Rotation and Color Distribution</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <title>Image Rotation and Histogram</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+<script>
+ var correctCaptcha = function(response) {
+ document.getElementsByName('resp')[0].value = response;
+ document.forms[0].submit();
+ };
+ </script>
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        form {
-            margin-bottom: 40px;
-        }
-
-        form label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        form input[type="file"],
-        form input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        form button {
-            display: block;
-            margin: 0 auto 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .image-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .image-container p {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .histogram-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .histogram-container img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .histogram-container p {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Image Rotation and Color Distribution</h1>
+    <h1>Image Rotation and Histogram</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <br>
+        Rotation Angle (in degrees):
+        <input type="number" name="angle" min="0" max="360" required>
+        <br>
+        <div class="g-recaptcha"   id="rcaptcha"  data-sitekey="{{site_key}}" data-callback="correctCaptcha"></div>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
 
-        <form method="POST" enctype="multipart/form-data">
-            <label for="image">Choose an image:</label>
-            <input type="file" name="image" id="image" accept="image/*" required>
+    {% if original_image %}
+    <h2>Original Image</h2>
+    <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
+    {% endif %}
 
-            <label for="angle">Enter rotation angle:</label>
-            <input type="number" name="angle" id="angle" required>
+    {% if rotated_image %}
+    <h2>Rotated Image</h2>
+    <img src="{{ url_for('static', filename=rotated_image) }}" alt="Rotated Image">
+    {% endif %}
 
-            <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
-
-            <button type="submit">Rotate Image</button>
-        </form>
-
-        {% if original_image %}
-        <div class="image-container">
-            <p>Original Image</p>
-            <img src="{{ url_for('static', filename=original_image) }}" alt="Original Image">
-        </div>
-        {% endif %}
-
-        {% if rotated_image %}
-        <div class="image-container">
-            <p>Rotated Image</p>
-            <img src="{{ url_for('static', filename=rotated_image) }}" alt="Rotated Image">
-        </div>
-        {% endif %}
-
-        {% if histograms %}
-        <div class="image-container">
-            <p>Color Distribution</p>
-            <img src="{{ url_for('static', filename=histograms) }}" alt="Color Distribution">
-        </div>
-        {% endif %}
-    </div>
-
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    {% if histograms %}
+    <h2>Histograms</h2>
+    <img src="{{ url_for('static', filename=histograms) }}" alt="Histograms">
+    {% endif %}
 </body>
 </html>

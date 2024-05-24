@@ -5,14 +5,17 @@ from PIL import Image
 import requests
 from flask import Flask, request, redirect, url_for, render_template
 
-app = Flask(__name__, static_folder='E:/uploads')
+
+app = Flask(__name__,static_folder='C:/uploads')
+
 
 UPLOAD_FOLDER = 'E:/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 # Замените на ваши ключи Google reCAPTCHA
-SITE_KEY = "6Lf4CdApAAAAAHVtd1dxnzeJLhsH1l5zT2v9I20F"
-SECRET_KEY= "6Lf4CdApAAAAAN5Q35bUs7DAqMxXK5aBgFsvR4q5"
+SECRET_KEY = "6LeJFtApAAAAAA9e7wBn0hC2mJo2NIOM5kDZ8MBN"
+SITE_KEY = "6LeJFtApAAAAACGMGgam1GpQGBrEoowXhGEOaJIK"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -32,38 +35,20 @@ def index():
         rotated_image = image.rotate(angle)
 
         # Создание гистограмм для изображений
-        original_image_array = np.array(image)
-        rotated_image_array = np.array(rotated_image)
-
-        original_color_distribution = np.zeros(256)
-        rotated_color_distribution = np.zeros(256)
-
-        for row in original_image_array:
-            for pixel in row:
-                original_color_distribution[pixel] += 1
-
-        for row in rotated_image_array:
-            for pixel in row:
-                rotated_color_distribution[pixel] += 1
-
-        max_frequency = 10000
-
-        original_color_distribution = original_color_distribution * (max_frequency / np.max(original_color_distribution))
-        rotated_color_distribution = rotated_color_distribution * (max_frequency / np.max(rotated_color_distribution))
+        original_hist = image.histogram()
+        rotated_hist = rotated_image.histogram()
 
         plt.figure(figsize=(12, 6))
         plt.subplot(1, 2, 1)
-        plt.bar(range(256), original_color_distribution, color='b', alpha=0.7)
-        plt.title('Распределение цветов исходного изображения')
-        plt.xlabel('Значение пикселя')
+        plt.plot(original_hist, color='b')
+        plt.title('Original Image Histogram')
+        plt.xlabel('Интенсивность пикселей')
         plt.ylabel('Частота')
-        plt.ylim(0, max_frequency)
         plt.subplot(1, 2, 2)
-        plt.bar(range(256), rotated_color_distribution, color='r', alpha=0.7)
-        plt.title('Распределение цветов повернутого изображения')
-        plt.xlabel('Значение пикселя')
+        plt.plot(rotated_hist, color='r')
+        plt.title('Rotated Image Histogram')
+        plt.xlabel('Интенсивность пикселей')
         plt.ylabel('Частота')
-        plt.ylim(0, max_frequency)
 
         rotated_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'rotated_image.png')
         histograms_path = os.path.join(app.config['UPLOAD_FOLDER'], 'histograms.png')
